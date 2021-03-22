@@ -10,4 +10,5 @@ plugins: ["prettier"]
 rules:
   prettier/prettier: "error"
   quotes: ["error", "double", { "allowTemplateLiterals": true }]
-  import/extensions: ["error", { "mjs": "ignorePackages" }]
+  import/extensions: ["error", { "mjs": "ignorePackages","js": "ignorePackages" }]
+  no-console: off
