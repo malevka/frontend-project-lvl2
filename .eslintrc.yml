@@ -1,14 +1,26 @@
 env:
   browser: true
   es2021: true
+  jest/globals: true
 extends:
   - airbnb-base
+  - prettier
 parserOptions:
   ecmaVersion: 12
   sourceType: module
-plugins: ["prettier"]
+plugins:
+  - prettier
+  - jest
 rules:
   prettier/prettier: "error"
   quotes: ["error", "double", { "allowTemplateLiterals": true }]
   import/extensions: ["error", { "mjs": "ignorePackages","js": "ignorePackages" }]
   no-console: off
+  no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
+  jest/no-disabled-tests: "warn"
+  jest/no-focused-tests: "error"
+  jest/no-identical-title: "error"
+  jest/prefer-to-have-length: "warn"
+  jest/valid-expect: "error"
+
+
