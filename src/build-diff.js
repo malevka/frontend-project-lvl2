@@ -4,17 +4,20 @@ export default (source, target) => {
   const unitedKeys = _.union(Object.keys(source), Object.keys(target));
   const sortedKeys = _.sortBy(unitedKeys);
 
+  const buildLog = (key, value, prefix = " ") =>
+    `  ${prefix} ${key}: ${value}\n`;
+
   const compareResult = sortedKeys.map((key) => {
     if (!(key in target)) {
-      return `  - ${key}: ${source[key]}\n`;
+      return buildLog(key, source[key], "-");
     }
     if (source[key] !== target[key]) {
-      return `${
-        key in source ? `  - ${key}: ${source[key]}\n` : ""
-      }  + ${key}: ${target[key]}\n`;
+      let result = "";
+      if (key in source) result = buildLog(key, source[key], "-");
+      result += buildLog(key, target[key], "+");
+      return result;
     }
-    return `    ${key}: ${source[key]}\n`;
+    return buildLog(key, source[key]);
   });
-  const result = `{\n${compareResult.join("")}}`;
-  return result;
+  return `{\n${compareResult.join("")}}`;
 };

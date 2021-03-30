@@ -17,5 +17,6 @@ program.action((filepath1, filepath2) =>
 );
 
 program.parse();
+
 const options = program.opts();
 if (options.help) program.help();
