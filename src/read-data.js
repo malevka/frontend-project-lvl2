@@ -6,5 +6,5 @@ export default (filepath) => {
   if (!existsSync(absolutePath)) {
     throw new Error(`'${absolutePath}' does not exist`);
   }
-  return readFileSync(absolutePath);
+  return readFileSync(absolutePath).toString();
 };
