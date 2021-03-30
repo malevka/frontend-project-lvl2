@@ -12,7 +12,9 @@ program
   .option("-h, --help", "output usage information")
   .option("-f, --format [type]", "output format");
 
-program.action((filepath1, filepath2) => genDiff(filepath1, filepath2));
+program.action((filepath1, filepath2) =>
+  console.log(genDiff(filepath1, filepath2))
+);
 
 program.parse();
 const options = program.opts();

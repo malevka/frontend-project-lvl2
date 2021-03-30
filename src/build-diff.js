@@ -6,15 +6,15 @@ export default (source, target) => {
 
   const compareResult = sortedKeys.map((key) => {
     if (!(key in target)) {
-      return `  - ${key}: ${source[key]} \n`;
+      return `  - ${key}: ${source[key]}\n`;
     }
     if (source[key] !== target[key]) {
       return `${
-        key in source ? `  - ${key}: ${source[key]} \n` : ""
-      }  + ${key}: ${target[key]} \n`;
+        key in source ? `  - ${key}: ${source[key]}\n` : ""
+      }  + ${key}: ${target[key]}\n`;
     }
-    return `    ${key}: ${source[key]} \n`;
+    return `    ${key}: ${source[key]}\n`;
   });
   const result = `{\n${compareResult.join("")}}`;
-  console.log(result);
+  return result;
 };
