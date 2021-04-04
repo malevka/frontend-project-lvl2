@@ -1,4 +1,5 @@
 import _ from "lodash";
+import ACTIONS from "./actions.js";
 
 export default (source, target) => {
   const iter = (oldData, newData) => {
@@ -11,13 +12,13 @@ export default (source, target) => {
           const value = _.isPlainObject(oldData[key])
             ? iter(oldData[key], oldData[key])
             : oldData[key];
-          return { key, value, action: "removed" };
+          return { key, value, action: ACTIONS.REMOVED };
         }
         if (!_.has(oldData, key)) {
           const value = _.isPlainObject(newData[key])
             ? iter(newData[key], newData[key])
             : newData[key];
-          return { key, value, action: "added" };
+          return { key, value, action: ACTIONS.ADDED };
         }
         if (_.isPlainObject(oldData[key]) && _.isPlainObject(newData[key])) {
           return { key, value: iter(oldData[key], newData[key]) };
@@ -28,10 +29,7 @@ export default (source, target) => {
         const newValue = _.isPlainObject(newData[key])
           ? iter(newData[key], newData[key])
           : newData[key];
-        return [
-          { key, value: oldValue, action: "removed" },
-          { key, value: newValue, action: "added" },
-        ];
+        return { key, value: [oldValue, newValue], action: ACTIONS.UPDATED };
       }
       const value =
         _.isPlainObject(oldData[key]) || _.isPlainObject(newData[key])
