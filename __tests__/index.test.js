@@ -90,18 +90,18 @@ describe("compare files", () => {
     "utf-8"
   );
 
-  test("compare json files with default formatters", () => {
+  test("compare json files with default formatter", () => {
     expect(genDiff(sourceJson, targetJson)).toMatch(expectedDiffResultStylish);
   });
-  test("compare yaml files with stylish", () => {
+  test("compare yaml files with default formatter", () => {
     expect(genDiff(sourceYaml, targetYaml)).toMatch(expectedDiffResultStylish);
   });
-  test("compare json files with default formatters", () => {
+  test("compare json files with stylish", () => {
     expect(genDiff(sourceJson, targetJson, "stylish")).toMatch(
       expectedDiffResultStylish
     );
   });
-  test("compare yaml files with default formatters", () => {
+  test("compare yaml files with with stylish", () => {
     expect(genDiff(sourceYaml, targetYaml, "stylish")).toMatch(
       expectedDiffResultStylish
     );
