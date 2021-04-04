@@ -19,17 +19,20 @@ export default (diff) => {
       if (action === ACTIONS.UPDATED) {
         const [oldValue, newValue] = value;
         return [
-          `${currentIdent}${getMarker(ACTIONS.REMOVED)} ${key}:${
-            oldValue !== "" ? ` ${iter(oldValue, depth + 1)}` : ""
-          }`,
-          `${currentIdent}${getMarker(ACTIONS.ADDED)} ${key}:${
-            newValue !== "" ? ` ${iter(newValue, depth + 1)}` : ""
-          }`,
+          `${currentIdent}${getMarker(ACTIONS.REMOVED)} ${key}: ${iter(
+            oldValue,
+            depth + 1
+          )}`,
+          `${currentIdent}${getMarker(ACTIONS.ADDED)} ${key}: ${iter(
+            newValue,
+            depth + 1
+          )}`,
         ];
       }
-      return `${currentIdent}${getMarker(action)} ${key}:${
-        value !== "" ? ` ${iter(value, depth + 1)}` : ""
-      }`;
+      return `${currentIdent}${getMarker(action)} ${key}: ${iter(
+        value,
+        depth + 1
+      )}`;
     });
     const bracketIndent = ident.repeat(indentSize);
     return ["{", result, `${bracketIndent}}`].flat().join("\n");
