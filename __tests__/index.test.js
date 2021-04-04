@@ -85,6 +85,10 @@ describe("compare files", () => {
     getFixturePath("expectedDiffResultStylish"),
     "utf-8"
   );
+  const expectedDiffResultJson = readFileSync(
+    getFixturePath("expectedDiffResultJsons"),
+    "utf-8"
+  );
   const expectedDiffResultPlain = readFileSync(
     getFixturePath("expectedDiffResultPlain"),
     "utf-8"
@@ -96,24 +100,35 @@ describe("compare files", () => {
   test("compare yaml files with default formatter", () => {
     expect(genDiff(sourceYaml, targetYaml)).toMatch(expectedDiffResultStylish);
   });
-  test("compare json files with stylish", () => {
+  test("compare json files with stylish formatter", () => {
     expect(genDiff(sourceJson, targetJson, "stylish")).toMatch(
       expectedDiffResultStylish
     );
   });
-  test("compare yaml files with with stylish", () => {
+  test("compare yaml files with with stylish formatter", () => {
     expect(genDiff(sourceYaml, targetYaml, "stylish")).toMatch(
       expectedDiffResultStylish
     );
   });
-  test("compare json files with plain", () => {
+  test("compare json files with plain formatter", () => {
     expect(genDiff(sourceJson, targetJson, "plain")).toMatch(
       expectedDiffResultPlain
     );
   });
-  test("compare yaml files with plain", () => {
+  test("compare yaml files with plain formatter", () => {
     expect(genDiff(sourceYaml, targetYaml, "plain")).toMatch(
       expectedDiffResultPlain
+    );
+  });
+
+  test("compare json files with json formatter", () => {
+    expect(genDiff(sourceJson, targetJson, "json")).toMatch(
+      expectedDiffResultJson
+    );
+  });
+  test("compare yaml files with json  formatter", () => {
+    expect(genDiff(sourceYaml, targetYaml, "json")).toMatch(
+      expectedDiffResultJson
     );
   });
 });
