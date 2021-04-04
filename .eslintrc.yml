@@ -4,16 +4,12 @@ env:
   jest/globals: true
 extends:
   - airbnb-base
-  - prettier
 parserOptions:
   ecmaVersion: 11
   sourceType: module
 plugins:
-  - prettier
   - jest
 rules:
-  prettier/prettier: "error"
-  quotes: ["error", "double", { "allowTemplateLiterals": true }]
   import/extensions: ["error", { "mjs": "ignorePackages","js": "ignorePackages" }]
   no-console: off
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
