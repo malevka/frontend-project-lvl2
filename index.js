@@ -1,9 +1,9 @@
-import readData from "./src/read-data.js";
-import buildDiff from "./src/build-diff.js";
-import parse from "./src/parsers.js";
-import getFormatter from "./src/formatters/index.js";
+import readData from './src/read-data.js';
+import buildDiff from './src/build-diff.js';
+import parse from './src/parsers.js';
+import getFormatter from './src/formatters/index.js';
 
-export default (sourceFilepath, targetFilepath, formatName = "stylish") => {
+export default (sourceFilepath, targetFilepath, formatName = 'stylish') => {
   try {
     const sourceParsedData = parse(sourceFilepath, readData(sourceFilepath));
     const targetParsedData = parse(targetFilepath, readData(targetFilepath));
@@ -13,5 +13,5 @@ export default (sourceFilepath, targetFilepath, formatName = "stylish") => {
   } catch (e) {
     console.error(e.message);
   }
-  return "";
+  return '';
 };

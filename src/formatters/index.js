@@ -1,7 +1,7 @@
-import _ from "lodash";
-import plain from "./plain.js";
-import stylish from "./stylish.js";
-import json from "./json.js";
+import _ from 'lodash';
+import plain from './plain.js';
+import stylish from './stylish.js';
+import json from './json.js';
 
 const formatters = {
   stylish,
@@ -10,7 +10,6 @@ const formatters = {
 };
 
 export default (formatName) => {
-  if (!_.has(formatters, formatName))
-    throw new Error(`Unknown format ${formatName}`);
+  if (!_.has(formatters, formatName)) throw new Error(`Unknown format ${formatName}`);
   return formatters[formatName];
 };

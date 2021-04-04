@@ -1,5 +1,5 @@
-import { readFileSync, existsSync } from "fs";
-import path from "path";
+import { readFileSync, existsSync } from 'fs';
+import path from 'path';
 
 export default (filepath) => {
   const absolutePath = path.resolve(filepath);

@@ -1,10 +1,10 @@
-import _ from "lodash";
-import ACTIONS from "./actions.js";
+import _ from 'lodash';
+import ACTIONS from './actions.js';
 
 export default (source, target) => {
   const iter = (oldData, newData) => {
     const sortedKeys = _.sortBy(
-      _.union(Object.keys(oldData), Object.keys(newData))
+      _.union(Object.keys(oldData), Object.keys(newData)),
     );
     return sortedKeys.flatMap((key) => {
       if (!_.isEqual(oldData[key], newData[key])) {
@@ -31,10 +31,7 @@ export default (source, target) => {
           : newData[key];
         return { key, value: [oldValue, newValue], action: ACTIONS.UPDATED };
       }
-      const value =
-        _.isPlainObject(oldData[key]) || _.isPlainObject(newData[key])
-          ? iter(oldData[key], oldData[key])
-          : oldData[key];
+      const value = _.isPlainObject(oldData[key]) ? iter(oldData[key], oldData[key]) : oldData[key];
       return { key, value };
     });
   };
