@@ -5,22 +5,13 @@ import { readFileSync } from "fs";
 import genDiff from "../index.js";
 import readData from "../src/read-data.js";
 import parse from "../src/parsers.js";
-import stylish from "../src/stylish.js";
+import stylish from "../src/formatters/stylish.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) =>
   path.join(__dirname, "..", "__fixtures__", filename);
-let expectedDiffResult;
 
-beforeAll(() => {
-  // Clears the database and adds some testing data.
-  // Jest will wait for this promise to resolve before running tests.
-  expectedDiffResult = readFileSync(
-    getFixturePath("expectedDiffResult"),
-    "utf-8"
-  );
-});
 test("read file content", () => {
   const expectedContent = readFileSync(getFixturePath("correct.json"), "utf-8");
   const sourcePath = getFixturePath("correct.json");
@@ -85,17 +76,44 @@ test("compare files with wrong paths", () => {
   genDiff(sourcePath, targetPath);
   expect(consoleSpy).toHaveBeenCalledWith(expectedResult);
 });
+describe("compare files", () => {
+  const sourceJson = getFixturePath("source.json");
+  const targetJson = getFixturePath("target.json");
+  const sourceYaml = getFixturePath("source.yml");
+  const targetYaml = getFixturePath("target.yml");
+  const expectedDiffResultStylish = readFileSync(
+    getFixturePath("expectedDiffResultStylish"),
+    "utf-8"
+  );
+  const expectedDiffResultPlain = readFileSync(
+    getFixturePath("expectedDiffResultPlain"),
+    "utf-8"
+  );
 
-test("compare json files", () => {
-  const sourcePath = getFixturePath("source.json");
-  const targetPath = getFixturePath("target.json");
-
-  expect(genDiff(sourcePath, targetPath)).toMatch(expectedDiffResult);
-});
-
-test("compare yaml files", () => {
-  const sourcePath = getFixturePath("source.yml");
-  const targetPath = getFixturePath("target.yml");
-
-  expect(genDiff(sourcePath, targetPath)).toMatch(expectedDiffResult);
+  test("compare json files with default formatters", () => {
+    expect(genDiff(sourceJson, targetJson)).toMatch(expectedDiffResultStylish);
+  });
+  test("compare yaml files with stylish", () => {
+    expect(genDiff(sourceYaml, targetYaml)).toMatch(expectedDiffResultStylish);
+  });
+  test("compare json files with default formatters", () => {
+    expect(genDiff(sourceJson, targetJson, "stylish")).toMatch(
+      expectedDiffResultStylish
+    );
+  });
+  test("compare yaml files with default formatters", () => {
+    expect(genDiff(sourceYaml, targetYaml, "stylish")).toMatch(
+      expectedDiffResultStylish
+    );
+  });
+  test("compare json files with plain", () => {
+    expect(genDiff(sourceJson, targetJson, "plain")).toMatch(
+      expectedDiffResultPlain
+    );
+  });
+  test("compare yaml files with plain", () => {
+    expect(genDiff(sourceYaml, targetYaml, "plain")).toMatch(
+      expectedDiffResultPlain
+    );
+  });
 });
