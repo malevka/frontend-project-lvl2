@@ -2,29 +2,19 @@ import _ from 'lodash';
 import TYPES from './types.js';
 
 const nodes = (key, { child, oldValue, newValue }) => {
-  const result = { key };
-  switch (true) {
-    case !_.isUndefined(child):
-      result.child = child;
-      result.type = TYPES.PARENT;
-      break;
-    case oldValue === newValue:
-      result.value = newValue;
-      result.type = TYPES.UNCHANGED;
-      break;
-    case _.isUndefined(oldValue):
-      result.value = newValue;
-      result.type = TYPES.ADDED;
-      break;
-    case _.isUndefined(newValue):
-      result.value = oldValue;
-      result.type = TYPES.REMOVED;
-      break;
-    default:
-      result.value = { oldValue, newValue };
-      result.type = TYPES.CHANGED;
+  if (!_.isUndefined(child)) {
+    return [{ key, child, type: TYPES.PARENT }];
   }
-  return [result];
+  if (oldValue === newValue) {
+    return [{ key, value: newValue, type: TYPES.UNCHANGED }];
+  }
+  if (_.isUndefined(oldValue)) {
+    return [{ key, value: newValue, type: TYPES.ADDED }];
+  }
+  if (_.isUndefined(newValue)) {
+    return [{ key, value: oldValue, type: TYPES.REMOVED }];
+  }
+  return [{ key, value: { oldValue, newValue }, type: TYPES.CHANGED }];
 };
 
 export const objectToUnchangedNodes = (object) => _.toPairs(object)
