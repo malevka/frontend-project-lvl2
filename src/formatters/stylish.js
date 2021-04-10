@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import TYPES from '../types.js';
-import { isNode } from '../nodes';
+import { isNode } from '../nodes.js';
 
 const getMarker = (action) => {
   const markers = { [TYPES.ADDED]: '+', [TYPES.REMOVED]: '-' };

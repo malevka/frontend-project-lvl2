@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import TYPES from '../types.js';
-import { isNode } from '../nodes';
+import { isNode } from '../nodes.js';
 
 const formatValue = (value) => {
   if (_.isArray(value)) return '[complex value]';

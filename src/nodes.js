@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import TYPES from './types';
+import TYPES from './types.js';
 
 const nodes = (key, value) => {
   const { child, oldValue, newValue } = value;

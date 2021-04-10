@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { isNode } from '../nodes';
+import { isNode } from '../nodes.js';
 
 export default (diff) => {
   const iter = (data) => {
