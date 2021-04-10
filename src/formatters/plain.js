@@ -1,18 +1,19 @@
 import _ from 'lodash';
-import ACTIONS from '../actions.js';
+import TYPES from '../types.js';
+import { isNode } from '../nodes';
 
 const formatValue = (value) => {
-  if (Array.isArray(value)) return '[complex value]';
+  if (_.isArray(value)) return '[complex value]';
   if (typeof value === 'string') return `'${value}'`;
   return value;
 };
-const buildLog = (path, action, value = []) => {
+const buildLog = (path, type, value) => {
   const stringifiedPath = path.join('.');
-  if (action === ACTIONS.ADDED) {
+  if (type === TYPES.ADDED) {
     return `Property '${stringifiedPath}' was added with value: ${formatValue(value)}`;
   }
-  if (action === ACTIONS.UPDATED) {
-    const [oldValue, newValue] = value;
+  if (type === TYPES.CHANGED) {
+    const { oldValue, newValue } = value;
     return `Property '${stringifiedPath}' was updated. From ${formatValue(
       oldValue,
     )} to ${formatValue(newValue)}`;
@@ -21,13 +22,15 @@ const buildLog = (path, action, value = []) => {
 };
 export default (diff) => {
   const iter = (data, path) => {
-    if (!('key' in _.head(data))) return [];
-    const result = data.flatMap(({ key, value, action }) => {
-      if (action !== undefined) {
-        return buildLog([...path, key], action, value);
+    if (!isNode(data)) return [];
+    const result = data.flatMap(({
+      key, value, type, child,
+    }) => {
+      if (type !== TYPES.PARENT && type !== TYPES.UNCHANGED) {
+        return buildLog([...path, key], type, value);
       }
-      if (Array.isArray(value)) {
-        return iter(value, [...path, key]);
+      if (!_.isUndefined(child)) {
+        return iter(child, [...path, key]);
       }
       return [];
     });

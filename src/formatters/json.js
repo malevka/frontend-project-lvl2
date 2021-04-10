@@ -1,17 +1,23 @@
 import _ from 'lodash';
+import { isNode } from '../nodes';
 
 export default (diff) => {
   const iter = (data) => {
-    if (!_.isArray(data) || !_.has(_.head(data), 'key')) {
+    if (!isNode(data)) {
       return _.isNull(data) ? null : data.toString();
     }
-    const result = data.map(({ key, value, action }) => ({
-      key,
-      value: iter(value),
-      action,
-    }));
 
-    return result;
+    return data.map(({
+      key, value, type, child,
+    }) => {
+      if (!_.isUndefined(child)) {
+        return { key, type, child: iter(child) };
+      }
+      if (isNode(value)) {
+        return { key, type, value: iter(value) };
+      }
+      return { key, type, value };
+    });
   };
   return JSON.stringify(iter(diff));
 };
