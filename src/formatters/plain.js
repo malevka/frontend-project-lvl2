@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import TYPES from '../types.js';
-import { isNode } from '../nodes.js';
+import isNode from '../nodes.js';
 
 const formatValue = (value) => {
   if (_.isArray(value)) return '[complex value]';
@@ -9,16 +9,16 @@ const formatValue = (value) => {
 };
 const buildLog = (path, type, value) => {
   const stringifiedPath = path.join('.');
-  if (type === TYPES.ADDED) {
-    return `Property '${stringifiedPath}' was added with value: ${formatValue(value)}`;
+  switch (type) {
+    case TYPES.ADDED:
+      return `Property '${stringifiedPath}' was added with value: ${formatValue(value)}`;
+    case TYPES.CHANGED:
+      return `Property '${stringifiedPath}' was updated. From ${formatValue(
+        value.sourceValue,
+      )} to ${formatValue(value.targetValue)}`;
+    default:
+      return `Property '${stringifiedPath}' was removed`;
   }
-  if (type === TYPES.CHANGED) {
-    const { sourceValue, targetValue } = value;
-    return `Property '${stringifiedPath}' was updated. From ${formatValue(
-      sourceValue,
-    )} to ${formatValue(targetValue)}`;
-  }
-  return `Property '${stringifiedPath}' was removed`;
 };
 export default (diff) => {
   const iter = (data, path) => {

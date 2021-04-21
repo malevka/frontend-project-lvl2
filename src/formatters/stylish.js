@@ -1,6 +1,5 @@
-import _ from 'lodash';
 import TYPES from '../types.js';
-import { isNode } from '../nodes.js';
+import isNode from '../nodes.js';
 
 const getMarker = (action) => {
   const markers = { [TYPES.ADDED]: '+', [TYPES.REMOVED]: '-' };
@@ -21,25 +20,26 @@ export default (diff) => {
     const result = data.flatMap(({
       key, value, type, child,
     }) => {
-      if (type === TYPES.PARENT) {
-        return `${currentIdent}${getMarker(type)} ${key}: ${iter(
-          child,
-          depth + 1,
-        )}`;
+      switch (type) {
+        case TYPES.PARENT:
+          return `${currentIdent}${getMarker(type)} ${key}: ${iter(
+            child,
+            depth + 1,
+          )}`;
+        case TYPES.CHANGED:
+          return [`${currentIdent}${getMarker(TYPES.REMOVED)} ${key}: ${iter(
+            value.sourceValue,
+            depth + 1,
+          )}`, `${currentIdent}${getMarker(TYPES.ADDED)} ${key}: ${iter(
+            value.targetValue,
+            depth + 1,
+          )}`];
+        default:
+          return `${currentIdent}${getMarker(type)} ${key}: ${iter(
+            value,
+            depth + 1,
+          )}`;
       }
-      if (type === TYPES.CHANGED) {
-        return [`${currentIdent}${getMarker(TYPES.REMOVED)} ${key}: ${iter(
-          value.sourceValue,
-          depth + 1,
-        )}`, `${currentIdent}${getMarker(TYPES.ADDED)} ${key}: ${iter(
-          value.targetValue,
-          depth + 1,
-        )}`];
-      }
-      return `${currentIdent}${getMarker(type)} ${key}: ${iter(
-        value,
-        depth + 1,
-      )}`;
     });
     const bracketIndent = ident.repeat(indentSize);
     return ['{', result, `${bracketIndent}}`].flat().join('\n');
