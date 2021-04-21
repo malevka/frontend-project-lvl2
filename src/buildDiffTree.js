@@ -17,7 +17,7 @@ const getNode = (key, { child, sourceValue, targetValue }) => {
   return { key, value: { sourceValue, targetValue }, type: TYPES.CHANGED };
 };
 
-const buildDiff = (source, target) => {
+const buildDiffTree = (source, target) => {
   const sortedKeys = _.sortBy(
     _.union(_.keys(source), _.keys(target)),
   );
@@ -25,14 +25,14 @@ const buildDiff = (source, target) => {
     const sourceValue = source[key];
     const targetValue = target[key];
     if (_.isPlainObject(sourceValue) && _.isPlainObject(targetValue)) {
-      return getNode(key, { child: buildDiff(sourceValue, targetValue) });
+      return getNode(key, { child: buildDiffTree(sourceValue, targetValue) });
     }
     const oldValue = _.isPlainObject(sourceValue)
-      ? buildDiff(sourceValue, sourceValue) : sourceValue;
+      ? buildDiffTree(sourceValue, sourceValue) : sourceValue;
     const newValue = _.isPlainObject(targetValue)
-      ? buildDiff(targetValue, targetValue) : targetValue;
+      ? buildDiffTree(targetValue, targetValue) : targetValue;
     return getNode(key, { targetValue: newValue, sourceValue: oldValue });
   });
 };
 
-export default buildDiff;
+export default buildDiffTree;

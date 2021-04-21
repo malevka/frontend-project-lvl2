@@ -9,7 +9,7 @@ const formatters = {
   json,
 };
 
-export default (formatName) => {
+export default (diffTree, formatName) => {
   if (!_.has(formatters, formatName)) throw new Error(`Unknown format ${formatName}`);
-  return formatters[formatName];
+  return formatters[formatName](diffTree);
 };
