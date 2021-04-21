@@ -7,7 +7,7 @@ const getParser = (format) => {
   };
   return mapping[format];
 };
-export default (format, data) => {
+export default (data, format) => {
   const parser = getParser(format);
   if (parser === undefined) {
     throw new Error(`unsupported format ${format}`);

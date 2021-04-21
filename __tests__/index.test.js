@@ -19,19 +19,19 @@ describe('parse data', () => {
     const sourcePath = getFixturePath('correct.json');
 
     const format = path.extname(sourcePath).slice(1);
-    expect(parse(format, readFileSync(path.resolve(sourcePath)))).toEqual(expectedSourceParsedData);
+    expect(parse(readFileSync(path.resolve(sourcePath)), format)).toEqual(expectedSourceParsedData);
   });
   test('parse json file with incorrect format', () => {
     const sourcePath = getFixturePath('incorrect.json');
 
     const format = path.extname(sourcePath).slice(1);
-    expect(() => parse(format, readFileSync(path.resolve(sourcePath)))).toThrow();
+    expect(() => parse(readFileSync(path.resolve(sourcePath)), format)).toThrow();
   });
 
   test('parse yaml file', () => {
     const sourcePath = getFixturePath('correct.yml');
     const format = path.extname(sourcePath).slice(1);
-    expect(parse(format, readFileSync(path.resolve(sourcePath)))).toEqual(expectedSourceParsedData);
+    expect(parse(readFileSync(path.resolve(sourcePath)), format)).toEqual(expectedSourceParsedData);
   });
 });
 
