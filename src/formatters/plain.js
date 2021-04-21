@@ -13,10 +13,10 @@ const buildLog = (path, type, value) => {
     return `Property '${stringifiedPath}' was added with value: ${formatValue(value)}`;
   }
   if (type === TYPES.CHANGED) {
-    const { oldValue, newValue } = value;
+    const { sourceValue, targetValue } = value;
     return `Property '${stringifiedPath}' was updated. From ${formatValue(
-      oldValue,
-    )} to ${formatValue(newValue)}`;
+      sourceValue,
+    )} to ${formatValue(targetValue)}`;
   }
   return `Property '${stringifiedPath}' was removed`;
 };

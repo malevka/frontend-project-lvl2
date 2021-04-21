@@ -11,12 +11,13 @@ export default (diff) => {
   const ident = ' ';
   const spacesCount = 4;
   const iter = (data, depth) => {
-    if (!isNode(data)) {
-      return _.isNull(data) ? null : data.toString();
-    }
     const indentSize = depth * spacesCount;
     const beforeMarkerCount = 2;
     const currentIdent = ident.repeat(beforeMarkerCount + indentSize);
+
+    if (!isNode(data)) {
+      return data;
+    }
     const result = data.flatMap(({
       key, value, type, child,
     }) => {
@@ -28,10 +29,10 @@ export default (diff) => {
       }
       if (type === TYPES.CHANGED) {
         return [`${currentIdent}${getMarker(TYPES.REMOVED)} ${key}: ${iter(
-          value.oldValue,
+          value.sourceValue,
           depth + 1,
         )}`, `${currentIdent}${getMarker(TYPES.ADDED)} ${key}: ${iter(
-          value.newValue,
+          value.targetValue,
           depth + 1,
         )}`];
       }
