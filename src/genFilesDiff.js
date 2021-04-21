@@ -5,8 +5,8 @@ import parse from './parsers.js';
 import format from './formatters/index.js';
 
 export default (sourceFilepath, targetFilepath, formatName = 'stylish') => {
-  const sourceData = readFileSync(path.resolve(sourceFilepath)).toString();
-  const targetData = readFileSync(path.resolve(targetFilepath)).toString();
+  const sourceData = readFileSync(path.resolve(sourceFilepath), 'utf-8');
+  const targetData = readFileSync(path.resolve(targetFilepath), 'utf-8');
   const sourceFormat = path.extname(sourceFilepath).slice(1);
   const targetFormat = path.extname(targetFilepath).slice(1);
   const sourceParsedData = parse(sourceData, sourceFormat);
