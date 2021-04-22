@@ -1,37 +1,28 @@
 import _ from 'lodash';
 import TYPES from './types.js';
 
-const getNode = (key, { child, sourceValue, targetValue }) => {
-  if (!_.isUndefined(child)) {
-    return { key, child, type: TYPES.PARENT };
-  }
-  if (sourceValue === targetValue) {
-    return { key, value: sourceValue, type: TYPES.UNCHANGED };
-  }
-  if (_.isUndefined(sourceValue)) {
-    return { key, value: targetValue, type: TYPES.ADDED };
-  }
-  if (_.isUndefined(targetValue)) {
-    return { key, value: sourceValue, type: TYPES.REMOVED };
-  }
-  return { key, value: { sourceValue, targetValue }, type: TYPES.CHANGED };
-};
-
-const buildDiffTree = (source, target) => {
+const buildDiffTree = (sData, tData) => {
   const sortedKeys = _.sortBy(
-    _.union(_.keys(source), _.keys(target)),
+    _.union(_.keys(sData), _.keys(tData)),
   );
   return sortedKeys.map((key) => {
-    const sourceValue = source[key];
-    const targetValue = target[key];
-    if (_.isPlainObject(sourceValue) && _.isPlainObject(targetValue)) {
-      return getNode(key, { child: buildDiffTree(sourceValue, targetValue) });
+    const sValue = sData[key];
+    const tValue = tData[key];
+    if (!_.has(tData, key)) {
+      return { type: TYPES.REMOVED, key, value: sValue };
     }
-    const oldValue = _.isPlainObject(sourceValue)
-      ? buildDiffTree(sourceValue, sourceValue) : sourceValue;
-    const newValue = _.isPlainObject(targetValue)
-      ? buildDiffTree(targetValue, targetValue) : targetValue;
-    return getNode(key, { targetValue: newValue, sourceValue: oldValue });
+    if (!_.has(sData, key)) {
+      return { type: TYPES.ADDED, key, value: tValue };
+    }
+    if (_.isPlainObject(sValue) && _.isPlainObject(tValue)) {
+      return { type: TYPES.PARENT, key, child: buildDiffTree(sValue, tValue) };
+    }
+    if (sValue !== tValue) {
+      return {
+        type: TYPES.CHANGED, key, value: sValue, newValue: tValue,
+      };
+    }
+    return { type: TYPES.UNCHANGED, key, value: sValue };
   });
 };
 
