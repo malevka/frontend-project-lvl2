@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import isNode from '../nodes.js';
 import TYPES from '../types.js';
 
 const ident = ' ';
@@ -13,6 +12,8 @@ const buildStyledKey = (indentSize, type, key) => {
   const currentIdent = ident.repeat(beforeMarkerCount + indentSize);
   return `${currentIdent}${getMarker(type)} ${key}`;
 };
+
+const isNode = (data) => (_.isArray(data) && _.has(_.head(data), 'key'));
 
 export default (diff) => {
   const spacesCount = 4;
@@ -47,6 +48,5 @@ export default (diff) => {
     }
     return data;
   };
-  const result = iter(diff, 0);
-  return result;
+  return iter(diff, 0);
 };
