@@ -1,12 +1,12 @@
 import _ from 'lodash';
-import plain from './plain.js';
-import stylish from './stylish.js';
-import json from './json.js';
+import formatAsPlain from './plain.js';
+import formatAsStylish from './stylish.js';
+import formatAsJson from './json.js';
 
 const formatters = {
-  stylish,
-  plain,
-  json,
+  stylish: formatAsStylish,
+  plain: formatAsPlain,
+  json: formatAsJson,
 };
 
 export default (diffTree, formatName) => {
