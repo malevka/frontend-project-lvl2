@@ -24,12 +24,10 @@ describe('compare files', () => {
     ['source.json', 'target.json', 'json', expectedDiffResultJson],
     ['source.yml', 'target.yml', 'json', expectedDiffResultJson],
   ])('compare %s and %s files with %s formatter', (originalFile, newFile, formatter, expected) => {
-    const originalData = getFixturePath(originalFile);
-    const newData = getFixturePath(newFile);
+    const args = [getFixturePath(originalFile), getFixturePath(newFile)];
     if (formatter !== 'default') {
-      expect(genDiff(originalData, newData, formatter)).toMatch(expected);
-    } else {
-      expect(genDiff(originalData, newData)).toMatch(expected);
+      args.push(formatter);
     }
+    expect(genDiff(...args)).toMatch(expected);
   });
 });
