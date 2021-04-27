@@ -5,9 +5,11 @@ const buildDiffTree = (originalData, newData) => {
   const sortedKeys = _.sortBy(
     _.union(_.keys(originalData), _.keys(newData)),
   );
+
   return sortedKeys.map((key) => {
     const originalValue = originalData[key];
     const newValue = newData[key];
+
     if (!_.has(newData, key)) {
       return { type: TYPES.REMOVED, key, value: originalValue };
     }
@@ -22,6 +24,7 @@ const buildDiffTree = (originalData, newData) => {
         type: TYPES.CHANGED, key, value: originalValue, newValue,
       };
     }
+
     return { type: TYPES.UNCHANGED, key, value: originalValue };
   });
 };
