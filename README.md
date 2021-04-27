@@ -6,7 +6,7 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/da3979974696718a255a/test_coverage)](https://codeclimate.com/github/malevka/frontend-project-lvl2/test_coverage)
 
 ### Description
-Compares two configuration files and shows a difference.
+Compares two yaml or json files and shows a difference.
 
 ### Installation
     $ make install
