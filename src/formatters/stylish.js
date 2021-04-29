@@ -3,49 +3,60 @@ import TYPES from '../types.js';
 
 const ident = ' ';
 
-const getMarker = (action) => {
-  const markers = { [TYPES.ADDED]: '+', [TYPES.REMOVED]: '-' };
-  const marker = markers[action];
-
-  return marker !== undefined ? marker : ' ';
+const getIdentSize = (depth) => {
+  const spacesCount = 4;
+  return depth * spacesCount;
 };
 
-const buildStyledKey = (indentSize, type, key) => {
+const getMarker = (type) => {
+  if (!type) {
+    return ident;
+  }
+  const markers = { [TYPES.ADDED]: '+', [TYPES.REMOVED]: '-' };
+  const marker = markers[type];
+
+  return marker !== undefined ? marker : ident;
+};
+
+const formatStyledKey = (depth, key, type) => {
   const beforeMarkerCount = 2;
-  const currentIdent = ident.repeat(beforeMarkerCount + indentSize);
+  const currentIdent = ident.repeat(beforeMarkerCount + getIdentSize(depth));
 
   return `${currentIdent}${getMarker(type)} ${key}`;
 };
 
+const stringifyValue = (nodeValue, depth) => {
+  if (!_.isObject(nodeValue)) {
+    return nodeValue;
+  }
+
+  const nodes = _.toPairs(nodeValue).map(([key, value]) => ({ key, value }));
+  const result = nodes.flatMap(({ key, value }) => {
+    const styledKey = formatStyledKey(depth, key);
+    return `${styledKey}: ${stringifyValue(value, depth + 1)}`;
+  });
+  const bracketIndent = ident.repeat(getIdentSize(depth));
+
+  return ['{', result, `${bracketIndent}}`].flat().join('\n');
+};
+
 export default (diff) => {
-  const spacesCount = 4;
-
   const iter = (data, depth) => {
-    const indentSize = depth * spacesCount;
-
-    if (_.isPlainObject(data)) {
-      const nodes = _.toPairs(data).map(([key, value]) => ({ key, value }));
-
-      return iter(nodes, depth);
-    }
-    if (!_.isObject(data)) {
-      return data;
-    }
     const result = data.flatMap(({
       key, value, type, child, newValue,
     }) => {
-      const styledKey = buildStyledKey(indentSize, type, key);
+      const styledKey = formatStyledKey(depth, key, type);
       switch (type) {
         case TYPES.PARENT:
           return `${styledKey}: ${iter(child, depth + 1)}`;
         case TYPES.CHANGED:
-          return [`${buildStyledKey(indentSize, TYPES.REMOVED, key)}: ${iter(value, depth + 1)}`,
-            `${buildStyledKey(indentSize, TYPES.ADDED, key)}: ${iter(newValue, depth + 1)}`];
+          return [`${formatStyledKey(depth, key, TYPES.REMOVED)}: ${stringifyValue(value, depth + 1)}`,
+            `${formatStyledKey(depth, key, TYPES.ADDED)}: ${stringifyValue(newValue, depth + 1)}`];
         default:
-          return `${styledKey}: ${iter(value, depth + 1)}`;
+          return `${styledKey}: ${stringifyValue(value, depth + 1)}`;
       }
     });
-    const bracketIndent = ident.repeat(indentSize);
+    const bracketIndent = ident.repeat(getIdentSize(depth));
 
     return ['{', result, `${bracketIndent}}`].flat().join('\n');
   };
